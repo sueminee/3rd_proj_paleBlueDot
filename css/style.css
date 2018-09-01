@@ -1,0 +1,21 @@
+body {
+  background-color: black;
+  margin: 0;
+}
+
+div {
+  margin: 0;
+}
+
+img {
+  height: 100vh;
+}
+
+#container {
+  white-space: nowrap;
+  overflow: scroll;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
