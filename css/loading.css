@@ -1,0 +1,32 @@
+h1 {
+    position: relative;
+    color: rgba(0, 0, 0, .3);
+    font-size: 5em;
+    text-align: center;
+}
+
+h1:before {
+    content: attr(data-text);
+    position: absolute;
+    overflow: hidden;
+    max-width: 7em;
+    white-space: nowrap;
+    color: #fff;
+    animation: loading 1s linear;
+}
+@keyframes loading {
+    0% {
+        max-width: 0;
+    }
+}
+
+#loading {
+    display: block;
+    position: absolute;
+    top: 10em;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+}
+
