@@ -1,34 +1,39 @@
-fetch('http:///52.78.57.243/star', {
-    method: 'GET',    
-}).then(function(res) {
-    console.log(res);
-})
+// axios.get("http:///52.78.57.243:5000/star")
+//      .then ( res => {
+//          console.log(res.data)
+//          var data = res.data;
+//      })
+//      .catch( err => console.log(err))
+
+// console.log(data);
 
 
-// d3.json("http://52.78.57.243/star", function(error, json) {
-//     if (error) throw error;
-//     console.log(json);
-// })
+d3.json("http:///52.78.57.243:5000/star")
+  .then(function(data) {
+      console.log(data);
+  
 
-/*
+
 //create somewhere to put the force directed graph
+
 var svg = d3.select("svg"),
  width = +svg.attr("width"),
  height = +svg.attr("height");
- console.log(svg);   
+   
 
 
  //d3 code goes here 
-var nodes_data =  [
-    {"name": "Travis", "sex": "M"},
-    {"name": "Rake", "sex": "M"},
-    {"name": "Diana", "sex": "F"},
-    {"name": "Rachel", "sex": "F"},
-    {"name": "Shawn", "sex": "M"},
-    {"name": "Emerald", "sex": "F"}
-]
+var nodes_data = data  
+// [
+//     {"name": "Travis", "sex": "M"},
+//     {"name": "Rake", "sex": "M"},
+//     {"name": "Diana", "sex": "F"},
+//     {"name": "Rachel", "sex": "F"},
+//     {"name": "Shawn", "sex": "M"},
+//     {"name": "Emerald", "sex": "F"}
+// ]
 
-console.log();
+
 //set up the simulation 
 //nodes only for now 
 var simulation = d3.forceSimulation()
@@ -62,6 +67,7 @@ function tickActions() {
     //update link positions 
     //simply tells one end of the line to follow one node around
     //and the other end of the line to follow the other node around
+    
     link
         .attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
@@ -74,18 +80,19 @@ simulation.on("tick", tickActions );
 
 //Create links data 
 var links_data = [
-    {"source": "Travis", "target": "Rake"},
-    {"source": "Diana", "target": "Rake"},
-    {"source": "Diana", "target": "Rachel"},
-    {"source": "Rachel", "target": "Rake"},
-    {"source": "Rachel", "target": "Shawn"},
-    {"source": "Emerald", "target": "Rachel"}
+    {"source": 1, "target": 2},
+    // {"source": "Diana", "target": "Rake"},
+    // {"source": "Diana", "target": "Rachel"},
+    // {"source": "Rachel", "target": "Rake"},
+    // {"source": "Rachel", "target": "Shawn"},
+    // {"source": "Emerald", "target": "Rachel"}
 ]
+
 
 //Create the link force 
 //We need the id accessor to use named sources and targets 
 var link_force =  d3.forceLink(links_data)
-                        .id(function(d) { return d.name; })
+                    .id(function(d) { return d.id; })
                         
 simulation.force("links",link_force)
 
@@ -95,6 +102,7 @@ var link = svg.append("g")
     .selectAll("line")
     .data(links_data)
     .enter().append("line")
+    .attr('stroke','white')
     .attr("stroke-width", 2);
 
-*/
+  })
