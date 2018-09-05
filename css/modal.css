@@ -3,6 +3,7 @@
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -12,27 +13,66 @@
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-/* Modal Content/Box */
-.modal-content {
+.modal_content {
+    position: relative;
     background-color: #fefefe;
-    margin: 10% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 5px solid #888;
-    width: 40%; /* Could be more or less, depending on screen size */
-    height: 60%;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
 }
 
 /* The Close Button */
-.close {
-    color: #aaa;
+#modal_close {
+    color: white;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
-    color: black;
+#modal_close:hover,
+#modal_close:focus {
+    color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+.modal_header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+#modal_body {padding: 2px 16px;}
+
+.modal_footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+#input_title{
+    width:95%;
+    height: 30px;
+}
+
+#input_msg{
+    width:95%;
+    height:300px;
 }

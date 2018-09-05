@@ -27,6 +27,7 @@ const fetchData = async () => {
         .force("charge_force", d3.forceManyBody())
         .force("center_force", d3.forceCenter(width / 2, height / 2));
 
+    var colors = d3.scaleOrdinal( d3.schemeCategory10 );        
     //draw circles for the nodes 
     var node = svg.append("g")
         .attr("class", "nodes")
@@ -35,7 +36,13 @@ const fetchData = async () => {
         .enter()
         .append("circle")
         .attr("r", 5)
-        .attr("fill", "red");
+        .style( "fill", function( d, i ) {
+            return colors(i);
+        })
+        .on("click", (e) => {
+            passingDataToModal(e.index, e.starName); //TODO:여기서 다른애들 더 보내주고, passingDataToModal 함수도 더 수정해야 함.
+            modal.style.display = "block";
+        });
 
 
     function tickActions() {
