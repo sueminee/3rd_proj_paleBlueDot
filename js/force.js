@@ -45,15 +45,21 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
       .on("drag", function () { force.start(); var r = [d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]; t0 = Date.now(); origin = r; projection.rotate(r); }))
 
 
-  d3.json('http://52.78.57.243:5000/star', (err, nodes) => {
+  d3.json('http://52.78.57.243:5000/star', (err, nodeData) => {
     if (err) throw err;
     links = [];
+    // 지금은 같은 별자리들끼리 원형으로 이어지는 알고리즘입니다. 하지만 나중에 다른 알고리즘으로 수정하려 합니다.
     for (var asterismId in linkData) {
       for (var i = 0; i < linkData[asterismId].length; i++) {
-        const source = linkData[asterismId][i];
-        const target = i === linkData[asterismId].length - 1 ? linkData[asterismId][0] : linkData[asterismId][i + 1]
-        links.push({ source: source - 1, target: target - 1 })
+        const source = nodeData[linkData[asterismId][i]];
+        const target = i === linkData[asterismId].length - 1 ? nodeData[linkData[asterismId][0]] : nodeData[linkData[asterismId][i + 1]]
+        links.push({ source: source, target: target })
       }
+    }
+
+    nodes = [];
+    for (var key in nodeData) {
+      nodes.push(nodeData[key]);
     }
 
     var link = svg.selectAll("path.link")
