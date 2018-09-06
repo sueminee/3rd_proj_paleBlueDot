@@ -21,3 +21,9 @@ body {
     line-height: 1.275em; 
     margin-top: 0.15em; 
 }
+
+#createStar {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
