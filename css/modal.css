@@ -54,14 +54,15 @@
 }
 
 .modal_header {
-    padding: 2px 16px;
+    padding: 10px 20px;
     background-color: #5cb85c;
     color: white;
 }
 
-#modal_body {padding: 2px 16px;}
+#modal_body {padding: 20px;}
 
 .modal_footer {
+    height: 30px;
     padding: 2px 16px;
     background-color: #5cb85c;
     color: white;
@@ -74,5 +75,10 @@
 
 #input_msg{
     width:95%;
-    height:300px;
+    height:200px;
+}
+
+#input_tag{
+    width:95%;
+    height: 30px;
 }

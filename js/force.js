@@ -40,7 +40,7 @@ const fetchData = async () => {
             return colors(i);
         })
         .on("click", (e) => {
-            passingDataToModal(e.index, e.starName); //TODO:여기서 다른애들 더 보내주고, passingDataToModal 함수도 더 수정해야 함.
+            passingDataToModal(e.id, e.starName); //TODO:여기서 다른애들 더 보내주고, passingDataToModal 함수도 더 수정해야 함.
             modal.style.display = "block";
         });
 
