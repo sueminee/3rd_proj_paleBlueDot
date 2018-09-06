@@ -68,9 +68,16 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
     var node = svg.selectAll("path.node")
       .data(nodes)
       .enter().append("path").attr("class", "node")
-      .style("fill", function (d) { return '#ccc'; })
+//       .style("fill", function (d) { return '#ccc'; })
       .style("stroke", function (d) { return '#000'; })
-      .call(force.drag);
+      .call(force.drag)
+      .style( "fill", function( d, i ) {
+            return colors(i);
+        })
+        .on("click", (e) => {
+            passingDataToModal(e.id, e.starName);
+            modal.style.display = "block";
+        });
     force
       .nodes(nodes)
       .links(links)
