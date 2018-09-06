@@ -16,15 +16,15 @@ window.onclick = function(event) {
 
 var modalBody = null;
 var modalTitle = null;
-var passingDataToModal = (id, starName) => {
-
-    fetch(`http://52.78.57.243:5000/star/${id}`)
+var passingDataToModal = (index, starName) => {
+    // console.log(index,starName)
+    fetch(`http://52.78.57.243:5000/star/${index}`)
     .then((res) => res.json())
     .then((data) => {
         console.log('star를 클릭하면 db에 요청하는 data_____________: ', data)
 
-        modalTitle = document.getElementById("headerH2");
-        modalTitle.innerHTML = `<h2>${starName}</h2>`;
+        modalTitle = document.getElementById("headerH3");
+        modalTitle.innerHTML = `<h3>${starName}</h3>`;
     
         modalBody = document.getElementById("modal_body");
         modalBody.innerHTML = `<p>이미지</p><p>메세지 : ${data.msg}</p><p>flag는 ${data.flag} 개</p><p>${data.createdAt}에 생성된 star</p>`;
@@ -35,8 +35,8 @@ var passingDataToModal = (id, starName) => {
 //=============================================================
 
 var makeInputModal = () => {
-    modalTitle = document.getElementById("headerH2");
-    modalTitle.innerHTML = `<h2>Making new Star</h2>`;
+    modalTitle = document.getElementById("headerH3");
+    modalTitle.innerHTML = `<h3>Making new Star</h3>`;
 
     modalBody = document.getElementById("modal_body");
     modalBody.innerHTML = `
@@ -67,7 +67,7 @@ var makeInputModal = () => {
 //TODO:thumbnail 보이게 하기.
 
 
-var btn = document.getElementById("inputModal");
+var btn = document.getElementById("createStar");
 btn.onclick = () => {
     makeInputModal();
     modal.style.display = "block";
@@ -83,7 +83,7 @@ var asterismsssssssss = '태그1,태그2,태그3';
 
 
 inputChange = (name, value) => {
-    star[`${name}`] = `${value}`
+    star[`${"name"}`] = `${value}`
     console.log(star)
 }
 
