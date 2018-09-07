@@ -1,6 +1,5 @@
 d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
   if (error) throw error;
-  console.log("d3.json/asterism_______", linkData)
   //Gnomonic 형태로 그려낸다
   var projections = {
     "Gnomonic": d3.geo.orthographic(),
@@ -21,7 +20,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
   };
 
   var width = window.innerWidth;
-  var height = window.innerHeight - 5;
+  var height = window.innerHeight;
 
   var projection = projections[config["projection"]]  //gnomonic
     .scale(1000)  //여기를 조절해 원하는 크기의 우주를 생성합니다
@@ -36,16 +35,14 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
     .gravity(config["gravity"])
     .size([width, height])
     .charge(-config["charge"]);
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select("#svgContainer").append("svg")
     .attr("width", width)
     .attr("height", height)
     .call(d3.behavior.drag()
       .origin(function () { var r = projection.rotate(); return { x: 2 * r[0], y: -2 * r[1] }; })
       .on("drag", function () { force.start(); var r = [d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]; t0 = Date.now(); origin = r; projection.rotate(r); }))
 
-
   d3.json('http://52.78.57.243:5000/star', (err, nodeData) => {
-    console.log('d3.json/star 해와서_________', nodeData)
     if (err) throw err;
     var links = [];
     // 지금은 같은 별자리들끼리 원형으로 이어지는 알고리즘입니다. 하지만 나중에 다른 알고리즘으로 수정하려 합니다.
@@ -73,12 +70,12 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
       .enter().append("path").attr("class", "node")
       .style("stroke", function (d) { return '#000'; })
       .call(force.drag)
-      .style( "fill", function( d, i ) {
-            return colors(i);
-        })
+      .style("fill", function (d, i) {
+        return colors(i);
+      })
       .on("click", (e) => {
-          passingDataToModal(e.index, e.starName);
-          modal.style.display = "block";
+        passingDataToModal(e.index, e.starName);
+        modal.style.display = "block";
       });
     force
       .nodes(nodes)
