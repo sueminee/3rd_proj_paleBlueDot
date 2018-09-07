@@ -36,8 +36,9 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
     .size([width, height])
     .charge(-config["charge"]);
   var svg = d3.select("#svgContainer").append("svg")
-    .attr("width", width)
-    .attr("height", height)
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 1000 1000")
+    .classed("responsive", true)
     .call(d3.behavior.drag()
       .origin(function () { var r = projection.rotate(); return { x: 2 * r[0], y: -2 * r[1] }; })
       .on("drag", function () { force.start(); var r = [d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]; t0 = Date.now(); origin = r; projection.rotate(r); }))
