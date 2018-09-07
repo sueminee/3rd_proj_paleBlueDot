@@ -1,4 +1,8 @@
 /* The Modal (background) */
+.p {
+    font-size: 16px;
+}
+
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -17,9 +21,10 @@
     position: relative;
     background-color: #fefefe;
     margin: auto;
+    color: #a4a2e5;
     padding: 0;
     border: 1px solid #888;
-    width: 50%;
+    width: 45%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
@@ -40,7 +45,7 @@
 
 /* The Close Button */
 #modal_close {
-    color: white;
+    color: #a4a2e5;
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -55,13 +60,16 @@
 
 .modal_header {
     padding: 5px 10px;
-    background-color: #5cb85c;
+    background-color: #a2c2e5;
     color: white;
 }
 
-#modal_body {padding: 20px;}
+#modal_body {
+    padding: 20px;
+    font-size: 14px;
+    }
 
-.modal_footer {
+#modal_footer {
     height: 30px;
     padding: 2px 16px;
     background-color: #5cb85c;
@@ -81,4 +89,19 @@
 #input_tag{
     width:95%;
     height: 30px;
+}
+
+#createdAt{
+    font-size: 10px;
+    color: white;
+}
+
+.box{
+    display: flex;
+    justify-content:space-between;
+    height: 20px;
+}
+
+.inputBox{
+    padding: 5px;
 }
