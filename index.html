@@ -12,21 +12,26 @@
   <link rel="stylesheet" type="text/css" href="./css/force.css">
   <script src="https://d3js.org/d3.v3.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="./js/background.js"></script>
 </head>
 
 <body>
-<button id="createStar">create New Star</button>
+  <img id="background" src="background.png">
+  <div id="svgContainer"></div>
+  <button id="createStar">create New Star</button>
   <div id="myModal" class="modal">
     <div class="modal_content">
       <div class="modal_header">
         <span id="modal_close">&times;</span>
-        <div id="headerH3" ><h3>Modal Header</h3></div>
+        <div id="headerH3">
+          <h3>Modal Header</h3>
+        </div>
       </div>
       <div id="modal_body"></div>
       <div class="modal_footer"></div>
     </div>
   </div>
-  
 
   <script src='./js/force.js'></script>
   <script src='./js/modal.js'></script>
