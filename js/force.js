@@ -20,13 +20,12 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
     "gravity": .1, "theta": .8
   };
 
-  var width = window.innerWidth,
-    height = window.innerHeight - 5,
-    nodes = [{ x: width / 2, y: height / 2 }],
-    links = [];
+  var width = window.innerWidth;
+  var height = window.innerHeight - 5;
+
   var projection = projections[config["projection"]]  //gnomonic
-    .scale(height / 2)
-    .translate([(width / 2) - 125, height / 2])
+    .scale(1000)  //여기를 조절해 원하는 크기의 우주를 생성합니다
+    .translate([width / 2, height / 2])
     .clipAngle(config["clip"] ? 90 : null)
   var path = d3.geo.path()
     .projection(projection)
@@ -48,7 +47,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
   d3.json('http://52.78.57.243:5000/star', (err, nodeData) => {
     console.log('d3.json/star 해와서_________', nodeData)
     if (err) throw err;
-    links = [];
+    var links = [];
     // 지금은 같은 별자리들끼리 원형으로 이어지는 알고리즘입니다. 하지만 나중에 다른 알고리즘으로 수정하려 합니다.
     for (var asterismId in linkData) {
       for (var i = 0; i < linkData[asterismId].length; i++) {
@@ -58,7 +57,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
       }
     }
 
-    nodes = [];
+    var nodes = [];
     for (var key in nodeData) {
       nodes.push(nodeData[key]);
     }
