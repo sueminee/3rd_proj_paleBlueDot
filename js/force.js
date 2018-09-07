@@ -1,6 +1,7 @@
 d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
   if (error) throw error;
-  //Gnomonic 형태로 그려낸다
+
+  // Gnomonic 형태로 그려냅니다
   var projections = {
     "Gnomonic": d3.geo.orthographic(),
   };
@@ -19,6 +20,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
     "gravity": .1, "theta": .8
   };
 
+  // 창의 크기를 읽습니다
   var width = window.innerWidth;
   var height = window.innerHeight;
 
@@ -35,10 +37,12 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
     .gravity(config["gravity"])
     .size([width, height])
     .charge(-config["charge"]);
+
+  // svg라는 element를 만들어냅니다
   var svg = d3.select("#svgContainer").append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 1000 1000")
-    .classed("responsive", true)
+    .attr("preserveAspectRatio", "xMinYMin meet") // window size에 responsive하기 위해 필요합니다
+    .attr("viewBox", "0 0 1000 1000") // window size에 responsive하기 위해 필요합니다
+    .classed("responsive", true)  // window size에 responsive하기 위해 필요합니다
     .call(d3.behavior.drag()
       .origin(function () { var r = projection.rotate(); return { x: 2 * r[0], y: -2 * r[1] }; })
       .on("drag", function () { force.start(); var r = [d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]; t0 = Date.now(); origin = r; projection.rotate(r); }))
@@ -55,11 +59,13 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linkData) => {
       }
     }
 
+    // GET 요청을 통해 받아온 데이터를 array 안에 정리합니다
     var nodes = [];
     for (var key in nodeData) {
       nodes.push(nodeData[key]);
     }
 
+    // 나중에 이미지를 불러오게 되면 필요 없습니다
     var colors = d3.scale.category10();
 
     var link = svg.selectAll("path.link")

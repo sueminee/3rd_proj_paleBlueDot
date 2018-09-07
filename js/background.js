@@ -1,10 +1,5 @@
 let dragging = false
 
-// $('#background').css({
-//   width: "auto",
-//   height: Math.sqrt(Math.pow(window.innerWidth, 2) + Math.pow(window.innerHeight, 2)),
-// });
-
 $(function () {
   // we are modifying background
   const target = $('#background');
