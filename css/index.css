@@ -27,10 +27,8 @@ body {
 
 #svgContainer {
     display: inline-block;
-    position: relative;
     width: 100%;
-    padding-bottom: 100%;
-    vertical-align: top;
+    height: 100%;
     overflow: hidden;
 }
 
@@ -46,6 +44,16 @@ body {
 
 #createStar {
     position: absolute;
-    left: 20px;
-    top: 20px;
+    width: 200px;
+    height: 50px;
+    left: calc(50vw - 100px);
+    top: calc(100vh - 50px);
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-color: #616183;
+    background-color: #45425c;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2f2f3a;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }

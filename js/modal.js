@@ -1,6 +1,5 @@
 // Get the modal
 const modal = document.getElementById('modal');
-
 // 모달창 닫는 버튼 (X)
 const span = document.getElementById("modal_close");
 // (X) 누르면 모달창 닫아라.
@@ -65,11 +64,8 @@ const clickFlag = (id, starName) => {
     })
 }
 
-
-//=============================================================
-
 const makeInputModal = () => {
-
+  
     modalTitle = document.getElementById("modal_starname");
     modalTitle.innerHTML = `<h3>Making A New Star</h3>`;
 
@@ -117,14 +113,6 @@ btn.onclick = () => {
     modal.style.display = "block";
 }
 
-
-// let star = {
-//     "starName": null,
-//     "imgName": null,
-//     "msg": null
-// }
-// let asterisms = [{asterismName:"태그1"}, {asterismName:"태그2"}, {asterismName:"태그3"}]
-
 const formData = new FormData();
 const inputChange = (name, value) => {
     formData.append(`${name}`, `${value}`)
@@ -138,26 +126,6 @@ const uploadImg = (name, value) => {
 }
 
 const submitNewStar = () => {
-    // let payload = {
-    //     star :star,
-    //     asterisms: asterisms,
-    //     img : null
-    // }
-    // console.log(payload)
-
-    // let formTag = document.getElementById("formTag");
-    // console.log(formTag)
-
-    // fetch('http://52.78.57.243:5000/star', {
-    // //     fetch("https:// jsonplaceholder.typicode.com/posts", {
-    //     method : 'POST',
-    //     data : formData
-    // })
-    // .then((res) => res.json())
-    // .then((data) => {
-    //     console.log('submitNewStar POST 후 response로 받는 data : ', data)
-    // });
-
     axios
     .post('http://52.78.57.243:5000/star', formData)
     .then(res => window.location.reload())
