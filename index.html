@@ -19,21 +19,18 @@
 <body>
   <img id="background" src="background.png">
   <div id="svgContainer"></div>
+
   <button id="createStar">CREATE NEW STAR</button>
-  <div id="myModal" class="modal">
+  <div class="modal" id="modal">
     <div class="modal_content">
-      <div class="modal_header">
+      <div class="modal_header_footer">
         <span id="modal_close">&times;</span>
-        <div id="headerH3">
-          <h3>Modal Header</h3>
-        </div>
+        <span id="modal_starname">
+          <p>Modal Header</p>
+        </span>
       </div>
       <div id="modal_body"></div>
-      <div class="modal_header">
-        <div id="createdAt">
-          <p>Modal Footer</p>
-        </div>
-      </div>
+      <div class="modal_header_footer"><div id="modal_createdAt"><p>Modal Footer</p></div></div>
     </div>
   </div>
 
