@@ -3,7 +3,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 
   // Gnomonic 형태로 그려냅니다
   const projections = {
-    "Gnomonic": d3.geo.orthographic(),
+    "Gnomonic": d3.geo.gnomonic(),
   };
 
   const config = {
@@ -29,12 +29,12 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     .translate([width / 2, height / 2])
     .clipAngle(config["clip"] ? 90 : null)
 
-  
+
   let path = d3.geo.path()
     .pointRadius(15)
     .projection(projection)
 
-  
+
   const force = d3.layout.force()
     .linkDistance(config["linkDistance"])
     .linkStrength(config["linkStrength"])
@@ -42,11 +42,11 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     .size([width, height])
     .charge(-config["charge"]);
 
-  
+
   // svg라는 element를 만들어냅니다
   let svg = d3.select("#svgContainer").append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet") // window size에 responsive하기 위해 필요합니다
-    .attr("viewBox", "0 0 1000 1000") // window size에 responsive하기 위해 필요합니다
+    .attr("width", "100%")
+    .attr("height", "100%")
     .classed("responsive", true)  // window size에 responsive하기 위해 필요합니다
     .call(d3.behavior.drag()
       .origin(function () { const r = projection.rotate(); return { x: 2 * r[0], y: -2 * r[1] }; })
@@ -54,24 +54,24 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 
 
   svg.append('defs').append('pattern')
-     .attr('id','imgpattern')
-     .attr('x', 0)
-     .attr('y', 0)
-     .attr('width', 1)
-     .attr('height', 1)
-     .append('image')
-     .attr('width', 40)
-     .attr('height', 30)
-     .attr('xlink:href','http://viewers.heraldcorp.com/news/photo/201804/12640_7045_488.jpg')
+    .attr('id', 'imgpattern')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', 1)
+    .attr('height', 1)
+    .append('image')
+    .attr('width', 40)
+    .attr('height', 30)
+    .attr('xlink:href', 'http://viewers.heraldcorp.com/news/photo/201804/12640_7045_488.jpg')
 
-  
+
   d3.json('http://52.78.57.243:5000/star', (err, nodesData) => {
     if (err) throw err;
     let links = [];
     // 지금은 같은 별자리들끼리 원형으로 이어지는 알고리즘입니다. 하지만 나중에 다른 알고리즘으로 수정하려 합니다.
     for (let asterismId in linksData) {
-      for (let i = 0; i < linksData[asterismId].length; i++) {
-        const starIds = linksData[asterismId];
+      const starIds = linksData[asterismId];
+      for (let i = 0; i < starIds.length; i++) {
 
         // node에 asterism 정보를 줍니다
         if (!nodesData[starIds[i]].asterisms || nodesData[starIds[i]].asterisms.length === 0) {
@@ -93,10 +93,6 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       nodes.push(nodesData[key]);
     }
 
-    // 나중에 이미지를 불러오게 되면 필요 없습니다
-    const colors = d3.scale.category10();
-
-
     let link = svg.selectAll("path.link")
       .data(links)
       .enter().append("path").attr("class", "link")
@@ -108,7 +104,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .call(force.drag)
       .style("fill", 'url(#imgpattern)')
       .on("click", (e) => {
-        passingDataToModal(e.index, e.starName);
+        passingDataToModal(e.id, e.starName);
         modal.style.display = "block";
       });
 
