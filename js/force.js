@@ -57,9 +57,9 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 
         // node에 asterism 정보를 줍니다
         if (!nodesData[starIds[i]].asterisms || nodesData[starIds[i]].asterisms.length === 0) {
-          nodesData[starIds[i]].asterisms = [starIds[i]];
+          nodesData[starIds[i]].asterisms = [asterismId];
         } else {
-          nodesData[starIds[i]].asterisms.push(starIds[i]);
+          nodesData[starIds[i]].asterisms.push(asterismId);
         }
 
         // 링크를 생성합니다
