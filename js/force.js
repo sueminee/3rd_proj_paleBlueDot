@@ -3,7 +3,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 
   // Gnomonic 형태로 그려냅니다
   const projections = {
-    "Gnomonic": d3.geo.orthographic(),
+    "Gnomonic": d3.geo.gnomonic(),
   };
 
   const config = {
