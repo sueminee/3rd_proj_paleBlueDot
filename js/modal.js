@@ -1,8 +1,8 @@
 // Get the modal
-var modal = document.getElementById('myModal');
+const modal = document.getElementById('modal');
 
 // 모달창 닫는 버튼 (X)
-var span = document.getElementById("modal_close");
+const span = document.getElementById("modal_close");
 // (X) 누르면 모달창 닫아라.
 span.onclick = function() {
     modal.style.display = "none";
@@ -14,29 +14,29 @@ window.onclick = function(event) {
     }
 }
 
-var modalBody = null;
-var modalTitle = null;
-var passingDataToModal = (starID, starName) => {
-    // console.log(index,starName)
-    fetch(`http://52.78.57.243:5000/star/${starID+1}`)
+let modalBody = null;
+let modalTitle = null;
+let modalFoot = null;
+const passingDataToModal = (starId, starName) => {
+    fetch(`http://52.78.57.243:5000/star/${starId}`)
     .then((res) => res.json())
     .then((data) => {
         console.log('star를 클릭하면 db에 요청하는 data_____________: ', data)
 
-        modalTitle = document.getElementById("headerH3");
-        modalTitle.innerHTML = `<h3>${data.starName}</h3>`;
+        modalTitle = document.getElementById("modal_starname");
+        modalTitle.innerHTML = `<p>${data.starName}</p>`;
     
         modalBody = document.getElementById("modal_body");
         modalBody.innerHTML = `
             <p>이미지</p>
             <p>메세지 : ${data.msg}</p>`;
 
-        modalFoot = document.getElementById("createdAt");
+        modalFoot = document.getElementById("modal_createdAt");
         modalFoot.innerHTML = `<div class="box"><div>created at ${data.createdAt}</div><div><button id="flagButton" onclick="clickFlag(${data.id})">flag ${data.flag}</button></div></div>`;
     });
 }
 
-var clickFlag = (id, starName) => {
+const clickFlag = (id, starName) => {
     console.log(id)
     fetch(`http://52.78.57.243:5000/flag/${id}`,{method: 'PUT'})
     .then((res) => {
@@ -45,8 +45,10 @@ var clickFlag = (id, starName) => {
     })
 }
 
+let preview = null;
+
 if (window.FileReader) {
-    var reader = new FileReader(), rFilter = /^(image\/bmp|image\/cis-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x-cmu-raster|image\/x-cmx|image\/x-icon|image\/x-portable-anymap|image\/x-portable-bitmap|image\/x-portable-graymap|image\/x-portable-pixmap|image\/x-rgb|image\/x-xbitmap|image\/x-xpixmap|image\/x-xwindowdump)$/i; 
+    const reader = new FileReader(), rFilter = /^(image\/bmp|image\/cis-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x-cmu-raster|image\/x-cmx|image\/x-icon|image\/x-portable-anymap|image\/x-portable-bitmap|image\/x-portable-graymap|image\/x-portable-pixmap|image\/x-rgb|image\/x-xbitmap|image\/x-xpixmap|image\/x-xwindowdump)$/i; 
     reader.onload = function (oFREvent) { 
         preview = document.getElementById("preview")
         preview.src = oFREvent.target.result;  
@@ -54,7 +56,7 @@ if (window.FileReader) {
     };  
     function doTest() {
         if (document.getElementById("myfile").files.length === 0) { return; }  
-        var file = document.getElementById("myfile").files[0];  
+        const file = document.getElementById("myfile").files[0];  
         if (!rFilter.test(file.type)) { alert("You must select a valid image file!"); return; }  
         reader.readAsDataURL(file); 
     }
@@ -65,12 +67,11 @@ if (window.FileReader) {
 
 //=============================================================
 
-var makeInputModal = () => {
+const makeInputModal = () => {
     modalTitle = document.getElementById("headerH3");
     modalTitle.innerHTML = `<h3>Making A New Star</h3>`;
 
     modalBody = document.getElementById("modal_body");
-
     modalBody.innerHTML = `
         <div class="container">
             <form id="formTag" target="_blank">
@@ -101,35 +102,33 @@ var makeInputModal = () => {
     modalFoot.innerHTML = `<div class="box"></div>`;
 }
 
-var btn = document.getElementById("createStar");
+const btn = document.getElementById("createStar");
 btn.onclick = () => {
     makeInputModal();
     modal.style.display = "block";
 }
 
-var star = {
+let star = {
     "starName": null,
     "imgName": null,
     "msg": null
 }
-var asterisms = [{asterismName:"태그1"}, {asterismName:"태그2"}, {asterismName:"태그3"}]
-var asterismsssssssss = '태그1,태그2,태그3';
+let asterisms = [{asterismName:"태그1"}, {asterismName:"태그2"}, {asterismName:"태그3"}]
 
-
-inputChange = (name, value) => {
+const inputChange = (name, value) => {
     star[`${name}`] = `${value}`
     console.log(star)
 }
 
-var submitNewStar = () => {
-    var payload = {
+const submitNewStar = () => {
+    let payload = {
         star :star,
         asterisms: asterisms,
         img : null
     }
     console.log(payload)
 
-    var formTag = document.getElementById("formTag");
+    let formTag = document.getElementById("formTag");
     console.log(formTag)
 
 //     fetch('http://52.78.57.243:5000/star', {

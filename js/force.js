@@ -83,7 +83,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       })
       .on("click", (e) => {
         console.log(e)
-        passingDataToModal(e.index, e.starName);
+        passingDataToModal(e.starId, e.starName);
         modal.style.display = "block";
       });
     force

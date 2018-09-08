@@ -58,7 +58,7 @@
     cursor: pointer;
 }
 
-.modal_header {
+.modal_header_footer {
     padding: 5px 10px;
     background-color: #a2c2e5;
     color: white;
@@ -91,7 +91,7 @@
     height: 30px;
 }
 
-#createdAt{
+#modal_createdAt{
     font-size: 10px;
     color: white;
 }
