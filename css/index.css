@@ -1,4 +1,7 @@
 body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
     padding: 0;
     margin: 0;
 }
@@ -20,4 +23,29 @@ body {
     font-size: 1.5em; 
     line-height: 1.275em; 
     margin-top: 0.15em; 
+}
+
+#svgContainer {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.responsive {
+    display: inline-block;
+    position: absolute;
+}
+
+#background {
+    position: absolute;
+    z-index: -1;
+}
+
+#createStar {
+    position: absolute;
+    left: 20px;
+    top: 20px;
 }
