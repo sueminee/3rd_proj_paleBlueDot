@@ -45,10 +45,22 @@ var clickFlag = (id, starName) => {
     })
 }
 
-var loadFile = function(event) {
-    var output = document.getElementById('output');
-    output.src = URL.createObjectURL(event.target.files[0]);
-};
+if (window.FileReader) {
+    var reader = new FileReader(), rFilter = /^(image\/bmp|image\/cis-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x-cmu-raster|image\/x-cmx|image\/x-icon|image\/x-portable-anymap|image\/x-portable-bitmap|image\/x-portable-graymap|image\/x-portable-pixmap|image\/x-rgb|image\/x-xbitmap|image\/x-xpixmap|image\/x-xwindowdump)$/i; 
+    reader.onload = function (oFREvent) { 
+        preview = document.getElementById("preview")
+        preview.src = oFREvent.target.result;  
+        preview.style.display = "inline-block";
+    };  
+    function doTest() {
+        if (document.getElementById("myfile").files.length === 0) { return; }  
+        var file = document.getElementById("myfile").files[0];  
+        if (!rFilter.test(file.type)) { alert("You must select a valid image file!"); return; }  
+        reader.readAsDataURL(file); 
+    }
+} else {
+    alert("FileReader object not found :( \nTry using Chrome, Firefox or WebKit");
+}
 
 
 //=============================================================
@@ -63,10 +75,9 @@ var makeInputModal = () => {
         <div class="container">
             <form id="formTag" target="_blank">
                 <div class="inputBox">
-                    <label for="image"><b>image</b></label>
-                    <div>
-                        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" onchange="loadFile(event)" />
-                        <img id="output"/>
+                    <label for="image"><b>image &emsp;</b></label><input type="file" id="myfile" class="hidden" name="myfile" size="30" onchange="doTest()">
+                    <div class="preview">
+                    <img id="preview" src="" style="display:none" />
                     </div>
                 </div>
                 <div class="inputBox">
@@ -89,9 +100,6 @@ var makeInputModal = () => {
     modalFoot = document.getElementById("createdAt");
     modalFoot.innerHTML = `<div class="box"></div>`;
 }
-//TODO:submit 함수 구현해야함. 
-//TODO:thumbnail 보이게 하기.
-
 
 var btn = document.getElementById("createStar");
 btn.onclick = () => {
