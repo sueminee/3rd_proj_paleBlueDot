@@ -68,7 +68,34 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
   d3.json('http://52.78.57.243:5000/star', (err, nodesData) => {
     if (err) throw err;
     let links = [];
-    // 지금은 같은 별자리들끼리 원형으로 이어지는 알고리즘입니다. 하지만 나중에 다른 알고리즘으로 수정하려 합니다.
+
+    // 별자리를 별 4개 단위로 그려냅니다
+    const drawFour = function (array, type) {
+      if (array.length === 1) { return; }
+      const drawLine = function (i, j) {
+        const source = nodesData[array[i]];
+        const target = nodesData[array[j]];
+        links.push({ source: source, target: target });
+      }
+
+      // 두 점을 잇습니다
+      drawLine(0, 1);
+      if (array.length === 2) { return; }
+
+      // 세 점을 잇습니다
+      drawLine(1, 2);
+      if (array.length === 3) { return; }
+
+      // 네 점을 잇습니다
+      drawLine(2, 3);
+
+      // 사각형을 만듭니다
+      if (type === 'square') { drawLine(0, 3); }
+
+      // 삼각형에 꼭지가 달린 형태를 만듭니다
+      if (type === 'triangle') { drawLine(1, 3); }
+    }
+
     for (let asterismId in linksData) {
       const starIds = linksData[asterismId];
       for (let i = 0; i < starIds.length; i++) {
@@ -80,10 +107,22 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
           nodesData[starIds[i]].asterisms.push(asterismId);
         }
 
-        // 링크를 생성합니다
-        const source = nodesData[starIds[i]];
-        const target = i === starIds.length - 1 ? nodesData[starIds[0]] : nodesData[starIds[i + 1]]
-        links.push({ source: source, target: target })
+        // 4개 단위로 별자리를 그립니다
+        if (i % 4 === 0) {
+          const types = ['line', 'square', 'triangle'];
+          let fourStarIds = [starIds[i]];
+          if (i + 1 < starIds.length) { fourStarIds.push(starIds[i + 1]); }
+          if (i + 2 < starIds.length) { fourStarIds.push(starIds[i + 2]); }
+          if (i + 3 < starIds.length) { fourStarIds.push(starIds[i + 3]); }
+          drawFour(fourStarIds, types[~~(Math.random() * 3)])
+        }
+
+        // 4개씩 그려진 별자리를 이어줍니다
+        if (i % 4 === 3 && i < starIds.length - 1) {
+          const source = nodesData[starIds[i]];
+          const target = nodesData[starIds[i + 1]];
+          links.push({ source: source, target: target });
+        }
       }
     }
 
