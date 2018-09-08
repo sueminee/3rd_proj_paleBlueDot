@@ -16,9 +16,9 @@ window.onclick = function(event) {
 
 var modalBody = null;
 var modalTitle = null;
-var passingDataToModal = (index, starName) => {
+var passingDataToModal = (starID, starName) => {
     // console.log(index,starName)
-    fetch(`http://52.78.57.243:5000/star/${index}`)
+    fetch(`http://52.78.57.243:5000/star/${starID+1}`)
     .then((res) => res.json())
     .then((data) => {
         console.log('star를 클릭하면 db에 요청하는 data_____________: ', data)
