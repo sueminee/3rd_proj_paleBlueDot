@@ -52,8 +52,8 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     let links = [];
     // 지금은 같은 별자리들끼리 원형으로 이어지는 알고리즘입니다. 하지만 나중에 다른 알고리즘으로 수정하려 합니다.
     for (let asterismId in linksData) {
-      for (let i = 0; i < linksData[asterismId].length; i++) {
-        const starIds = linksData[asterismId];
+      const starIds = linksData[asterismId];
+      for (let i = 0; i < starIds.length; i++) {
 
         // node에 asterism 정보를 줍니다
         if (!nodesData[starIds[i]].asterisms || nodesData[starIds[i]].asterisms.length === 0) {
