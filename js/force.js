@@ -91,8 +91,8 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
         return colors(i);
       })
       .on("click", (e) => {
-        console.log(e)
-        passingDataToModal(e.starId, e.starName);
+        console.log("node__________", e)
+        passingDataToModal(e.id, e.starName);
         modal.style.display = "block";
       });
     force
