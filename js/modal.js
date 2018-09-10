@@ -107,11 +107,12 @@ const makeInputModal = () => {
   modalFoot.innerHTML = `<div class="box"></div>`;
 }
 
-const btn = document.getElementById("createStar");
-btn.onclick = () => {
+const btn = $("#createStar");
+btn.hover(() => { btn.css('background-color', '#616183'); }, () => { btn.css('background-color', '#45425c'); })
+btn.on('click', () => {
   makeInputModal();
   modal.style.display = "block";
-}
+})
 
 const formData = new FormData();
 const inputChange = (name, value) => {
