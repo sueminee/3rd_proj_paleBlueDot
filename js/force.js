@@ -1,65 +1,62 @@
 d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
   if (error) throw error;
-
-  // Gnomonic 형태로 그려냅니다
-  const projections = {
-    "Gnomonic": d3.geo.gnomonic(),
-    "Orthographic": d3.geo.orthographic(),
-    "Azimuthal Eqidistant": d3.geo.azimuthalEquidistant(),
-  };
-
-  const config = {
-    "projection": "Gnomonic",
-    // true로 해두면 뒷면이 보이지 않게 됩니다 
-    "clip": true,
-    // 마찰력. 노드들이 움직이면서 서로 얼마나 부대낄지 결정합니다. 0 안 부대낌 ~ 1 부대낌
-    "friction": .9,
-    // 다발들이 얼마나 좁게 묶이는지 조절합니다. 0 느슨함 ~ 1 빡빡함
-    "linkStrength": 2,
-    // 링크의 간격을 조절합니다
-    "linkDistance": 20,
-    "charge": 30,
-    "gravity": .1, "theta": .8
-  };
-
-  // 창의 크기를 읽습니다
-  let width = window.innerWidth;
-  let height = window.innerHeight;
-
-  const projection = projections[config["projection"]]  //gnomonic
-    .scale(1000)  //여기를 조절해 원하는 크기의 우주를 생성합니다
-    .translate([width / 2, height / 2])
-    .clipAngle(config["clip"] ? 90 : null)
-
-
-  let path = d3.geo.path()
-    .pointRadius(15)
-    .projection(projection)
-
-
-  const force = d3.layout.force()
-    .linkDistance(config["linkDistance"])
-    .linkStrength(config["linkStrength"])
-    .gravity(config["gravity"])
-    .size([width, height])
-    .charge(-config["charge"]);
-
-
-  // svg라는 element를 만들어냅니다
-  let svg = d3.select("#svgContainer").append("svg")
-    .attr("width", "100%")
-    .attr("height", "100%")
-    .classed("responsive", true)  // window size에 responsive하기 위해 필요합니다
-    .call(d3.behavior.drag()
-      .origin(function () { const r = projection.rotate(); return { x: 2 * r[0], y: -2 * r[1] }; })
-      .on("drag", function () { force.start(); const r = [d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]; t0 = Date.now(); origin = r; projection.rotate(r); }))
-
-
-
   d3.json('http://52.78.57.243:5000/star', (err, nodesData) => {
     if (err) throw err;
-    let links = [];
 
+    // Gnomonic 형태로 그려냅니다
+    const projections = {
+      "Gnomonic": d3.geo.gnomonic(),
+      "Orthographic": d3.geo.orthographic(), // 얘는 디버깅 용입니다
+    };
+
+    const config = {
+      "projection": "Gnomonic",
+      // true로 해두면 뒷면이 보이지 않게 됩니다 
+      "clip": true,
+      // 마찰력. 노드들이 움직이면서 서로 얼마나 부대낄지 결정합니다. 0 안 부대낌 ~ 1 부대낌
+      "friction": .9,
+      // 다발들이 얼마나 좁게 묶이는지 조절합니다. 0 느슨함 ~ 1 빡빡함
+      "linkStrength": 2,
+      // 링크의 간격을 조절합니다
+      "linkDistance": 20,
+      "charge": 30,
+      "gravity": .1, "theta": .8
+    };
+
+    // 창의 크기를 읽습니다
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let scale = Object.keys(nodesData).length * 7;
+
+    const projection = projections[config["projection"]]  //gnomonic
+      .scale(scale)  //여기를 조절해 원하는 크기의 우주를 생성합니다
+      .translate([width / 2, height / 2])
+      .clipAngle(config["clip"] ? 90 : null)
+
+
+    let path = d3.geo.path()
+      .pointRadius(15)
+      .projection(projection)
+
+
+    const force = d3.layout.force()
+      .linkDistance(config["linkDistance"])
+      .linkStrength(config["linkStrength"])
+      .gravity(config["gravity"])
+      .size([width, height])
+      .charge(-config["charge"]);
+
+
+    // svg라는 element를 만들어냅니다
+    let svg = d3.select("#svgContainer").append("svg")
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .classed("responsive", true)  // window size에 responsive하기 위해 필요합니다
+      .call(d3.behavior.drag()
+        .origin(function () { const r = projection.rotate(); return { x: 2 * r[0], y: -2 * r[1] }; })
+        .on("drag", function () { force.start(); const r = [d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]; t0 = Date.now(); origin = r; projection.rotate(r); }))
+
+    let links = [];
     // 별자리를 별 4개 단위로 그려냅니다
     const drawFour = function (array, type) {
       if (array.length === 1) { return; }
@@ -122,6 +119,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     for (let key in nodesData) {
       nodes.push(nodesData[key]);
     }
+
 
     // 함수들정의
     var mouseOverFunction = function(d) {
@@ -199,24 +197,30 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 
     let node = svg.selectAll("path.node")
       .data(nodes)
-      .enter().append("path").attr("class", "node")
-      .style("stroke", function (d) { return '#000'; })
+      .enter().append("path")
+      .attr("class", "node")
+      .attr("id", function (d, i) {
+        return 'node' + i;
+      })
       .call(force.drag)
-      .style("fill", function(d, i) {
+
+    
         svg.append('defs').append('pattern')
-        .attr('id', 'imgpattern'+i)
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', 1)
-        .attr('height', 1)
-        .append('image')
-        .attr('width', 30)
-        .attr('height', 30)
-        .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/'+d.imgName)
-        return `url(#imgpattern${i})`})
+          .attr('id', 'imgpattern' + i)
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', 1)
+          .attr('height', 1)
+          .append('image')
+          .attr('width', 30)
+          .attr('height', 30)
+          .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/' + d.imgName)
+        return `url(#imgpattern${i})`
+      })
       .on("click", (e) => {
         passingDataToModal(e.id, e.starName);
         modal.style.display = "block";
+
       })
       .on("mouseover", mouseOverFunction)
       .on("mouseout", mouseOutFunction);
@@ -235,7 +239,27 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 link
   .attr("marker-end", "url()");
 
-  console.log(links);
+
+      });
+
+    // 별 둘레를 깜빡이는 함수입니다
+    const setColor = function (i, str, direction) {
+      const num = parseInt(str, 16);
+      if (direction === 1) {
+        if (num === 15) { return setColor(i, 'f', -1); }
+        setTimeout(() => setColor(i, (num + 1).toString(16), 1), Math.sin(num * Math.PI / 32) * 100)
+        return $('#node' + i).css('stroke', '#' + str + str + str);
+      } else if (direction === -1) {
+        if (num === 0) { return setColor(i, '0', 1); }
+        setTimeout(() => setColor(i, (num - 1).toString(16), -1), Math.sin(num * Math.PI / 32) * 100)
+        return $('#node' + i).css('stroke', '#' + str + str + str);
+      }
+    }
+
+    for (let i = 0; i < nodes.length; i++) {
+      setColor(i, (i % 16).toString(16), 1)
+    }
+
 
     force
       .nodes(nodes)
@@ -243,7 +267,7 @@ link
       .on("tick", tick)
       .start();
 
-      
+
     // star들이 극쪽에 집중되지 않게 합니다
     function transformY(y) {
       if (y % 360 >= -90 && y % 360 < 90) {
