@@ -203,44 +203,40 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
         return 'node' + i;
       })
       .call(force.drag)
-
-    
+      .style('fill', function (d, i) {
         svg.append('defs').append('pattern')
-          .attr('id', 'imgpattern' + i)
-          .attr('x', 0)
-          .attr('y', 0)
-          .attr('width', 1)
-          .attr('height', 1)
-          .append('image')
-          .attr('width', 30)
-          .attr('height', 30)
-          .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/' + d.imgName)
-        return `url(#imgpattern${i})`
+        .attr('id', 'imgpattern' + i)
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', 1)
+        .attr('height', 1)
+        .append('image')
+        .attr('width', 30)
+        .attr('height', 30)
+        .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/' + d.imgName)
+      return `url(#imgpattern${i})`
       })
       .on("click", (e) => {
         passingDataToModal(e.id, e.starName);
         modal.style.display = "block";
-
       })
       .on("mouseover", mouseOverFunction)
       .on("mouseout", mouseOutFunction);
 
       svg
-  .append("marker")
-  .attr("id", "arrowhead")
-  .attr("refX", 6 + 7) // Controls the shift of the arrow head along the path
-  .attr("refY", 2)
-  .attr("markerWidth", 6)
-  .attr("markerHeight", 4)
-  .attr("orient", "auto")
-  .append("path")
-    .attr("d", "M 0,0 V 4 L6,2 Z");
+      .append("marker")
+      .attr("id", "arrowhead")
+      .attr("refX", 6 + 7) // Controls the shift of the arrow head along the path
+      .attr("refY", 2)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 4)
+      .attr("orient", "auto")
+      .append("path")
+        .attr("d", "M 0,0 V 4 L6,2 Z");
 
-link
-  .attr("marker-end", "url()");
+    link
+      .attr("marker-end", "url()");
 
-
-      });
 
     // 별 둘레를 깜빡이는 함수입니다
     const setColor = function (i, str, direction) {
