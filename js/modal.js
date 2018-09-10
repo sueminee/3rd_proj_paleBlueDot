@@ -107,8 +107,11 @@ const makeInputModal = () => {
   modalFoot.innerHTML = `<div class="box"></div>`;
 }
 
+// create new star 버튼입니다
 const btn = $("#createStar");
+// 마우스가 호버 되면 색이 변합니다
 btn.hover(() => { btn.css('background-color', '#616183'); }, () => { btn.css('background-color', '#45425c'); })
+// 클릭하면 모달창을 띄웁니다
 btn.on('click', () => {
   makeInputModal();
   modal.style.display = "block";
