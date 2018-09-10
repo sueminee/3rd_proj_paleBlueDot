@@ -4,6 +4,8 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
   // Gnomonic 형태로 그려냅니다
   const projections = {
     "Gnomonic": d3.geo.gnomonic(),
+    "Orthographic": d3.geo.orthographic(),
+    "Azimuthal Eqidistant": d3.geo.azimuthalEquidistant(),
   };
 
   const config = {
@@ -143,11 +145,9 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .call(force.drag)
       .style("fill", 'url(#imgpattern)')
       .on("click", (e) => {
-        // console.log("node__________", e)
         passingDataToModal(e.id, e.starName);
         modal.style.display = "block";
       });
-
 
     force
       .nodes(nodes)
@@ -155,9 +155,27 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .on("tick", tick)
       .start();
 
-    function tick() {
-      node.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, d.y] } }); return p ? p : 'M 0 0' });
-      link.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[d.source.x, d.source.y], [d.target.x, d.target.y]] } }); return p ? p : 'M 0 0' });
+    // star들이 극쪽에 집중되지 않게 합니다
+    function transformY(y) {
+      if (y % 360 >= -90 && y % 360 < 90) {
+        return y = Math.asin((y % 90) / 90) / Math.PI * 180;
+      } else if (y % 360 >= 90 && y % 360 < 180) {
+        return y = Math.asin((90 - y % 90) / 90) / Math.PI * 180;
+      } else if (y % 360 >= 180 && y % 360 < 270) {
+        return y = Math.asin(-(y % 90) / 90) / Math.PI * 180
+      } else if (y % 360 >= 270) {
+        return y = Math.asin(-(90 - y % 90) / 90) / Math.PI * 180
+      }
     }
+
+    function tick() {
+      node.attr("d", function (d) {
+        const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, transformY(d.y)] } });
+        return p
+      });
+      link.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[d.source.x, transformY(d.source.y)], [d.target.x, transformY(d.target.y)]] } }); return p });
+    }
+
+
   });
 })
