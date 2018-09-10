@@ -187,7 +187,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
         return `url(#imgpattern${i})`
       })
       .on("click", (e) => {
-        passingDataToModal(e.id, e.starName);
+        passingDataToModal(e.id, e.asterisms);
         modal.style.display = "block";
       })
       .on("mouseover", mouseOverFunction)
