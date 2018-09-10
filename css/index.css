@@ -56,4 +56,12 @@ body {
     font-weight: bold;
     color: #2f2f3a;
     text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    animation-delay: 1s;
+}
+
+@keyframes animatetop {
+    from {bottom:-350px; opacity:0}
+    to {bottom:0; opacity:1}
 }
