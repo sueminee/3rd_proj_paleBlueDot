@@ -29,7 +29,7 @@ if (window.FileReader) {
     preview.src = oFREvent.target.result;
     preview.style.display = "inline-block";
   };
-  function doTest() {
+  doTest= () => {
     if (document.getElementById("myfile").files.length === 0) { return; }
     const file = document.getElementById("myfile").files[0];
     if (!rFilter.test(file.type)) { alert("You must select a valid image file!"); return; }
@@ -53,33 +53,30 @@ const getAsterisms = async asterisms => {
 }
 
 const passingDataToModal = async (starId, asterisms) => {
+  const res = await fetch(`http://52.78.57.243:5000/star/${starId}`);
+  const data = await res.json();
 
-  await fetch(`http://52.78.57.243:5000/star/${starId}`)
-    .then((res) => res.json())
-    .then((data) => {
+  modalTitle = document.getElementById("modal_starname");
+  modalTitle.innerHTML = `<p>${data.starName}</p>`;
 
-      modalTitle = document.getElementById("modal_starname");
-      modalTitle.innerHTML = `<p>${data.starName}</p>`;
+  modalImg = document.getElementById("modal_img");
+  modalImg.innerHTML = `
+    <div>
+      <img src="http://52.78.57.243:5000/${data.imgName}" height="auto" width="100%"/>
+    </div>`;
 
-      modalImg = document.getElementById("modal_img");
-      modalImg.innerHTML = `
-        <div>
-          <img src="http://52.78.57.243:5000/${data.imgName}" height="auto" width="100%"/>
-        </div>`;
+  modalMsg = document.getElementById("modal_msg");
+  modalMsg.innerHTML = `
+    <div id="msg_tag">
+      <p>${data.msg}</p>
+    </div>`;
 
-      modalMsg = document.getElementById("modal_msg");
-      modalMsg.innerHTML = `
-        <div id="msg_tag">
-          <p>${data.msg}</p>
-        </div>`;
+  modalFoot = document.getElementById("modal_createdAt");
+  modalFoot.innerHTML = `<div class="box"><div>created at ${data.createdAt}</div><div><button id="flagButton" onclick="clickFlag(${data.id})">flag ${data.flag}</button></div></div>`;
 
-      modalFoot = document.getElementById("modal_createdAt");
-      modalFoot.innerHTML = `<div class="box"><div>created at ${data.createdAt}</div><div><button id="flagButton" onclick="clickFlag(${data.id})">flag ${data.flag}</button></div></div>`;
-    })
-
-    const tags = await getAsterisms(asterisms);
-    const a = tags.join(' ');
-    $("#modal_msg").append(`<p>${a}</p>`);
+  const tags = await getAsterisms(asterisms);
+  const a = tags.join(' ');
+  $("#modal_msg").append(`<p>${a}</p>`);
 }
 
 
