@@ -43,14 +43,12 @@ let modalBody = null;
 let modalTitle = null;
 let modalFoot = null;
 
-const getAsterisms = async (asterisms) => {
+const getAsterisms = async asterisms => {
   let tags = await Promise.all(asterisms.map(async asterism => {
     const res = await fetch(`http://52.78.57.243:5000/asterism/${asterism}`)
     const data = await res.json();
-    console.log('fetch하고 json 한 date', data)
     return '#' +data.asterismName;
-    }));  
-  console.log(tags);
+  })); 
   return tags;
 }
 
@@ -59,8 +57,7 @@ const passingDataToModal = async (starId, starName, asterisms) => {
   await fetch(`http://52.78.57.243:5000/star/${starId}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log('star를 클릭하면 db에 요청하는 data_____________: ', data)
-      
+
       modalTitle = document.getElementById("modal_starname");
       modalTitle.innerHTML = `<p>${data.starName}</p>`;
 
@@ -82,19 +79,14 @@ const passingDataToModal = async (starId, starName, asterisms) => {
 
     const tags = await getAsterisms(asterisms);
     const a = tags.join(' ');
-    console.log(a)
     $("#modal_msg").append(`<p>${a}</p>`);
 }
 
 
 
-const clickFlag = (id, starName) => {
-  console.log(id)
-  fetch(`http://52.78.57.243:5000/flag/${id}`, { method: 'PUT' })
-    .then((res) => {
-      console.log(res)
-      passingDataToModal(id, starName);
-    })
+const clickFlag = async (id, starName) => {
+  await fetch(`http://52.78.57.243:5000/flag/${id}`, { method: 'PUT' });
+  passingDataToModal(id, starName);
 }
 
 const makeInputModal = () => {
@@ -147,16 +139,14 @@ btn.on('click', () => {
 const formData = new FormData();
 const inputChange = (name, value) => {
   formData.append(`${name}`, `${value}`)
-  console.log(formData.get(`${name}`))
 }
 
 const uploadImg = (name, value) => {
   doTest();
   formData.append(`${name}`, document.getElementById('myfile').files[0])
-  console.log(formData.get(`${name}`))
 }
 
-const submitNewStar = () => {
-  axios.post('http://52.78.57.243:5000/star', formData)
-  .then(res => window.location.reload())
+const submitNewStar = async () => {
+  await axios.post('http://52.78.57.243:5000/star', formData);
+  window.location.reload()
 }
