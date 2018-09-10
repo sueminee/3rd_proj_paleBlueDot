@@ -127,10 +127,6 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     let node = svg.selectAll("path.node")
       .data(nodes)
       .enter().append("path").attr("class", "node")
-      .style("stroke", function (d) {
-        // 수정 중 - 해빈
-        return '#bbb';
-      })
       .call(force.drag)
       .style("fill", function (d, i) {
         console.log(d.imgName);
@@ -151,6 +147,21 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
         modal.style.display = "block";
       });
 
+    // 별 둘레를 깜빡이는 함수입니다
+    const setColor = function (str, direction) {
+      num = parseInt(str, 16);
+      if (direction === 1) {
+        if (num === 15) { return setColor('f', -1); }
+        console.log(Math.sin(num * Math.PI / 32) * 10);
+        setTimeout(() => setColor((num + 1).toString(16), 1), Math.sin(num * Math.PI / 32) * 100)
+        return $('.node').css('stroke', '#' + str + str + str);
+      } else if (direction === -1) {
+        if (num === 0) { return setColor('0', 1); }
+        setTimeout(() => setColor((num - 1).toString(16), -1), Math.sin(num * Math.PI / 32) * 100)
+        return $('.node').css('stroke', '#' + str + str + str);
+      }
+    }
+    setColor('7', 1)
 
     force
       .nodes(nodes)
