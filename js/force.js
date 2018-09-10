@@ -4,6 +4,8 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
   // Gnomonic 형태로 그려냅니다
   const projections = {
     "Gnomonic": d3.geo.gnomonic(),
+    "Orthographic": d3.geo.orthographic(),
+    "Azimuthal Eqidistant": d3.geo.azimuthalEquidistant(),
   };
 
   const config = {
@@ -19,6 +21,8 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     "charge": 30,
     "gravity": .1, "theta": .8
   };
+
+
 
   // 창의 크기를 읽습니다
   let width = window.innerWidth;
@@ -52,17 +56,6 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .origin(function () { const r = projection.rotate(); return { x: 2 * r[0], y: -2 * r[1] }; })
       .on("drag", function () { force.start(); const r = [d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]; t0 = Date.now(); origin = r; projection.rotate(r); }))
 
-
-  svg.append('defs').append('pattern')
-    .attr('id', 'imgpattern')
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('width', 1)
-    .attr('height', 1)
-    .append('image')
-    .attr('width', 25)
-    .attr('height', 25)
-    .attr('xlink:href', 'http://pngimg.com/uploads/red_star/red_star_PNG9.png')
 
 
   d3.json('http://52.78.57.243:5000/star', (err, nodesData) => {
@@ -132,6 +125,8 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       nodes.push(nodesData[key]);
     }
 
+    
+
     let link = svg.selectAll("path.link")
       .data(links)
       .enter().append("path").attr("class", "link")
@@ -141,23 +136,54 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .enter().append("path").attr("class", "node")
       .style("stroke", function (d) { return '#000'; })
       .call(force.drag)
-      .style("fill", 'url(#imgpattern)')
+      .style("fill", function(d, i) {
+        console.log(d.imgName);
+        svg.append('defs').append('pattern')
+        .attr('id', 'imgpattern'+i)
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', 1)
+        .attr('height', 1)
+        .append('image')
+        .attr('width', 30)
+        .attr('height', 30)
+        .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/'+d.imgName)
+        return `url(#imgpattern${i})`})
       .on("click", (e) => {
-        // console.log("node__________", e)
-        passingDataToModal(e.id, e.starName);
+        console.log('node에 뿌려지는 data', e)
+        passingDataToModal(e.id, e.starName, e.asterisms);
         modal.style.display = "block";
       });
 
-
+     
     force
       .nodes(nodes)
       .links(links)
       .on("tick", tick)
       .start();
 
-    function tick() {
-      node.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, d.y] } }); return p ? p : 'M 0 0' });
-      link.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[d.source.x, d.source.y], [d.target.x, d.target.y]] } }); return p ? p : 'M 0 0' });
+      
+      
+    // star들이 극쪽에 집중되지 않게 합니다
+    function transformY(y) {
+      if (y % 360 >= -90 && y % 360 < 90) {
+        return y = Math.asin((y % 90) / 90) / Math.PI * 180;
+      } else if (y % 360 >= 90 && y % 360 < 180) {
+        return y = Math.asin((90 - y % 90) / 90) / Math.PI * 180;
+      } else if (y % 360 >= 180 && y % 360 < 270) {
+        return y = Math.asin(-(y % 90) / 90) / Math.PI * 180
+      } else if (y % 360 >= 270) {
+        return y = Math.asin(-(90 - y % 90) / 90) / Math.PI * 180
+      }
     }
+
+    function tick() {
+      node.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, transformY(d.y)] } }); return p; })
+
+
+
+      link.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[d.source.x, transformY(d.source.y)], [d.target.x, transformY(d.target.y)]] } }); return p });
+    }
+
   });
 })
