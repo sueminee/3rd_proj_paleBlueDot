@@ -68,7 +68,7 @@ const passingDataToModal = async (starId, asterisms) => {
 
   modalMsg = document.getElementById("modal_msg");
   modalMsg.innerHTML = `
-    <div id="msg_tag">
+    <div id="modal_msg" style="overflow:scroll; height:300px;">
       <p>${data.msg}</p>
     </div>`;
 
@@ -83,7 +83,7 @@ const passingDataToModal = async (starId, asterisms) => {
 
   const tags = await getAsterisms(asterisms);
   const a = tags.join(' ');
-  $("#modal_msg").append(`<p>${a}</p>`);
+  $("#modal_msg").append(`<div id="modal_asterisms"><p>${a}</p></div>`);
 }
 
 const clickFlag = async (id) => {
@@ -94,37 +94,37 @@ const clickFlag = async (id) => {
 }
 
 const makeInputModal = () => {
-  modalBody = document.getElementById("modal_body");
-  modalBody.innerHTML = `
-        <div class="container">
-            <div class="inputBox">
-                <div>
-                    <label for="image"><b>image &emsp;</b></label>
-                    <input type="file" id="myfile" capture class="hidden" name="img" size="30" onchange="uploadImg(this.name, this.value)">
-                    <div class="preview">
-                        <img id="preview" src="" style="display:none" />
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="inputBox">
-                    <label for="title"><b>title</b></label>
-                    <div><input id="input_title" type="text" placeholder="제목을 입력해라" name="starName" onchange="inputChange(this.name, this.value)" required ></div>
-                </div>
-                    <div class="inputBox">
-                    <label for="msg"><b>message</b></label>
-                    <div><textarea id="input_msg" placeholder="메세지를 입력해라" name="msg"  onchange="inputChange(this.name, this.value)" required></textarea></div>
-                </div>
-                <div class="inputBox">
-                    <label for="tag"><b>tag</b></label>
-                    <div><input id="input_tag" type="text" placeholder="태그를 입력하세요. 여러개일 경우 띄어쓰기로 구분해주세요. (예: 마라샹궈 건대맛집 허씨네)" name="asterisms"  onchange="inputChange(this.name, this.value)"></div>
-                </div>
-                <div class="inputBox">
-                    <button type="submit" onClick="submitNewStar()">post</button>
-                </div>
-            </div>
-        </div>
-        `;
+  modalTitle = document.getElementById("modal_starname");
+  modalTitle.innerHTML = `<h3>Create a New Star</h3>`;
+
+  modalImg = document.getElementById("modal_img");
+  console.log(modalImg);
+  modalImg.innerHTML = `
+    <div class="inputBox">
+      <label for="image"><b>image &emsp;</b></label>
+      <input type="file" id="myfile" capture class="hidden" name="img" size="30" onchange="uploadImg(this.name, this.value)">
+      <div class="preview">
+        <img id="preview" src="" style="display:none" />
+      </div>
+    </div>`;
+
+  modalMsg = document.getElementById("modal_msg");
+  modalMsg.innerHTML = `
+    <div class="inputBox">
+      <label for="title"><b>title</b></label>
+      <div><input id="input_title" type="text" placeholder="제목을 입력해라" name="starName" onchange="inputChange(this.name, this.value)" required ></div>
+    </div>
+    <div class="inputBox">
+      <label for="msg"><b>message</b></label>
+      <div><textarea id="input_msg" placeholder="메세지를 입력해라" name="msg"  onchange="inputChange(this.name, this.value)" required></textarea></div>
+    </div>
+    <div class="inputBox">
+      <label for="tag"><b>tag</b></label>
+      <div><input id="input_tag" type="text" placeholder="태그를 입력하세요. 여러개일 경우 띄어쓰기로 구분해주세요. (예: 마라샹궈 건대맛집 허씨네)" name="asterisms"  onchange="inputChange(this.name, this.value)"></div>
+      </div>
+    <div class="inputBox">
+      <button type="submit" onClick="submitNewStar()">post</button>
+    </div>`;
 
   modalFoot = document.getElementById("modal_createdAt");
   modalFoot.innerHTML = `<div class="box"></div>`;
