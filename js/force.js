@@ -123,18 +123,75 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       nodes.push(nodesData[key]);
     }
 
-    // svg.append('defs').append('pattern')
-    // .attr('id', 'imgpattern')
-    // .attr('x', 0)
-    // .attr('y', 0)
-    // .attr('width', 1)
-    // .attr('height', 1)
-    // .append('image')
-    // .attr('width', 30)
-    // .attr('height', 30)
-    // .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/'+`${n.imgName}`)
-    // console.log(nodes);
-    //1536549719672.png
+    // 함수들정의
+    var mouseOverFunction = function(d) {
+      var circle = d3.select(this);
+    
+      node
+        .transition(500)
+          .style("opacity", function(o) {
+            return isConnected(o, d) ? 1.0 : 0.2 ;
+          })
+    
+    
+      link
+        .transition(500)
+          .style("stroke-opacity", function(o) {
+            return o.source === d || o.target === d ? 1 : 0.2;
+          })
+          .transition(500)
+          .attr("marker-end", function(o) {
+            return o.source === d || o.target === d ? "url(#arrowhead)" : "url()";
+          });
+    
+      circle
+        .transition(500)
+        .attr("r", function(){ return 20 });
+    }
+    
+    
+    
+    
+    var mouseOutFunction = function() {
+      var circle = d3.select(this);
+    
+      node
+        .transition(500);
+    
+      link
+        .transition(500);
+    
+      circle
+        .transition(500)
+        .attr("r", 15);
+    }
+    
+    function isConnected(a, b) {
+        return isConnectedAsTarget(a, b) || isConnectedAsSource(a, b) || a.asterisms === b.asterisms;
+    }
+    
+    function isConnectedAsSource(a, b) {
+        return linkedByIndex[a.asterisms + "," + b.asterisms];
+    }
+    
+    function isConnectedAsTarget(a, b) {
+        return linkedByIndex[b.asterisms + "," + a.asterisms];
+    }
+    
+    function isEqual(a, b) {
+        return a.asterisms === b.asterisms;
+    }
+
+    var linkedByIndex = {};
+    links.forEach(function(d) {
+      linkedByIndex[d.source.asterisms + "," + d.target.asterisms] = true;
+    });
+
+    console.log(linkedByIndex);
+  // 함수들정의
+
+  
+  
 
     let link = svg.selectAll("path.link")
       .data(links)
@@ -146,7 +203,6 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .style("stroke", function (d) { return '#000'; })
       .call(force.drag)
       .style("fill", function(d, i) {
-        console.log(d.imgName);
         svg.append('defs').append('pattern')
         .attr('id', 'imgpattern'+i)
         .attr('x', 0)
@@ -161,8 +217,25 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .on("click", (e) => {
         passingDataToModal(e.id, e.starName);
         modal.style.display = "block";
-      });
+      })
+      .on("mouseover", mouseOverFunction)
+      .on("mouseout", mouseOutFunction);
 
+      svg
+  .append("marker")
+  .attr("id", "arrowhead")
+  .attr("refX", 6 + 7) // Controls the shift of the arrow head along the path
+  .attr("refY", 2)
+  .attr("markerWidth", 6)
+  .attr("markerHeight", 4)
+  .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M 0,0 V 4 L6,2 Z");
+
+link
+  .attr("marker-end", "url()");
+
+  console.log(links);
 
     force
       .nodes(nodes)
@@ -184,9 +257,10 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       }
     }
 
-    function tick() {
-      node.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, transformY(d.y)] } }); return p; });
+    function tick() {      
       link.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[d.source.x, transformY(d.source.y)], [d.target.x, transformY(d.target.y)]] } }); return p });
+
+      node.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, transformY(d.y)] } }); return p; })
     }
 
   });
