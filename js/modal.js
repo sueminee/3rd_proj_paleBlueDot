@@ -29,7 +29,7 @@ if (window.FileReader) {
     preview.src = oFREvent.target.result;
     preview.style.display = "inline-block";
   };
-  function doTest() {
+  doTest= () => {
     if (document.getElementById("myfile").files.length === 0) { return; }
     const file = document.getElementById("myfile").files[0];
     if (!rFilter.test(file.type)) { alert("You must select a valid image file!"); return; }
@@ -43,58 +43,47 @@ let modalBody = null;
 let modalTitle = null;
 let modalFoot = null;
 
-const getAsterisms = async (asterisms) => {
+const getAsterisms = async asterisms => {
   let tags = await Promise.all(asterisms.map(async asterism => {
     const res = await fetch(`http://52.78.57.243:5000/asterism/${asterism}`)
     const data = await res.json();
-    console.log('fetch하고 json 한 date', data)
     return '#' +data.asterismName;
-    }));  
-  console.log(tags);
+  })); 
   return tags;
 }
 
 const passingDataToModal = async (starId, asterisms) => {
+  const res = await fetch(`http://52.78.57.243:5000/star/${starId}`);
+  const data = await res.json();
 
-  await fetch(`http://52.78.57.243:5000/star/${starId}`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log('star를 클릭하면 db에 요청하는 data_____________: ', data)
-      
-      modalTitle = document.getElementById("modal_starname");
-      modalTitle.innerHTML = `<p>${data.starName}</p>`;
+  modalTitle = document.getElementById("modal_starname");
+  modalTitle.innerHTML = `<p>${data.starName}</p>`;
 
-      modalImg = document.getElementById("modal_img");
-      modalImg.innerHTML = `
-        <div>
-          <img src="http://52.78.57.243:5000/${data.imgName}" height="auto" width="100%"/>
-        </div>`;
+  modalImg = document.getElementById("modal_img");
+  modalImg.innerHTML = `
+    <div>
+      <img src="http://52.78.57.243:5000/${data.imgName}" height="auto" width="100%"/>
+    </div>`;
 
-      modalMsg = document.getElementById("modal_msg");
-      modalMsg.innerHTML = `
-        <div id="msg_tag">
-          <p>${data.msg}</p>
-        </div>`;
+  modalMsg = document.getElementById("modal_msg");
+  modalMsg.innerHTML = `
+    <div id="msg_tag">
+      <p>${data.msg}</p>
+    </div>`;
 
-      modalFoot = document.getElementById("modal_createdAt");
-      modalFoot.innerHTML = `<div class="box"><div>created at ${data.createdAt}</div><div><button id="flagButton" onclick="clickFlag(${data.id})">flag ${data.flag}</button></div></div>`;
-    })
+  modalFoot = document.getElementById("modal_createdAt");
+  modalFoot.innerHTML = `<div class="box"><div>created at ${data.createdAt}</div><div><button id="flagButton" onclick="clickFlag(${data.id})">flag ${data.flag}</button></div></div>`;
 
-    const tags = await getAsterisms(asterisms);
-    const a = tags.join(' ');
-    console.log(a)
-    $("#modal_msg").append(`<p>${a}</p>`);
+  const tags = await getAsterisms(asterisms);
+  const a = tags.join(' ');
+  $("#modal_msg").append(`<p>${a}</p>`);
 }
 
 
 
-const clickFlag = (id, starName) => {
-  console.log(id)
-  fetch(`http://52.78.57.243:5000/flag/${id}`, { method: 'PUT' })
-    .then((res) => {
-      console.log(res)
-      passingDataToModal(id, starName);
-    })
+const clickFlag = async (id, starName) => {
+  await fetch(`http://52.78.57.243:5000/flag/${id}`, { method: 'PUT' });
+  passingDataToModal(id, starName);
 }
 
 const makeInputModal = () => {
@@ -147,17 +136,14 @@ btn.on('click', () => {
 const formData = new FormData();
 const inputChange = (name, value) => {
   formData.append(`${name}`, `${value}`)
-  console.log(formData.get(`${name}`))
 }
 
 const uploadImg = (name, value) => {
   doTest();
   formData.append(`${name}`, document.getElementById('myfile').files[0])
-  console.log(formData.get(`${name}`))
 }
 
-const submitNewStar = () => {
-  axios
-    .post('http://52.78.57.243:5000/star', formData)
-    .then(res => window.location.reload())
+const submitNewStar = async () => {
+  await axios.post('http://52.78.57.243:5000/star', formData);
+  window.location.reload()
 }
