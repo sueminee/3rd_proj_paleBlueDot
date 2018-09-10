@@ -62,6 +62,10 @@ body {
     animation-delay: 1s;
 }
 
+#createStar:focus {
+    outline: 0;
+}
+
 @keyframes animatetop {
     from {bottom:-350px; opacity:0}
     to {bottom:0; opacity:1}

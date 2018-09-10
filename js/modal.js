@@ -39,29 +39,54 @@ if (window.FileReader) {
   alert("FileReader object not found :( \nTry using Chrome, Firefox or WebKit");
 }
 
-
-
 let modalBody = null;
 let modalTitle = null;
 let modalFoot = null;
-const passingDataToModal = (starId, starName) => {
-  fetch(`http://52.78.57.243:5000/star/${starId}`)
+
+const getAsterisms = async (asterisms) => {
+  let tags = await Promise.all(asterisms.map(async asterism => {
+    const res = await fetch(`http://52.78.57.243:5000/asterism/${asterism}`)
+    const data = await res.json();
+    console.log('fetch하고 json 한 date', data)
+    return '#' +data.asterismName;
+    }));  
+  console.log(tags);
+  return tags;
+}
+
+const passingDataToModal = async (starId, starName, asterisms) => {
+
+  await fetch(`http://52.78.57.243:5000/star/${starId}`)
     .then((res) => res.json())
     .then((data) => {
-      // console.log('star를 클릭하면 db에 요청하는 data_____________: ', data)
-
+      console.log('star를 클릭하면 db에 요청하는 data_____________: ', data)
+      
       modalTitle = document.getElementById("modal_starname");
       modalTitle.innerHTML = `<p>${data.starName}</p>`;
 
-      modalBody = document.getElementById("modal_body");
-      modalBody.innerHTML = `
-            <p>이미지</p>
-            <p>메세지 : ${data.msg}</p>`;
+      modalImg = document.getElementById("modal_img");
+      modalImg.innerHTML = `
+        <div>
+          <img src="http://52.78.57.243:5000/${data.imgName}" height="auto" width="100%"/>
+        </div>`;
+
+      modalMsg = document.getElementById("modal_msg");
+      modalMsg.innerHTML = `
+        <div id="msg_tag">
+          <p>${data.msg}</p>
+        </div>`;
 
       modalFoot = document.getElementById("modal_createdAt");
       modalFoot.innerHTML = `<div class="box"><div>created at ${data.createdAt}</div><div><button id="flagButton" onclick="clickFlag(${data.id})">flag ${data.flag}</button></div></div>`;
-    });
+    })
+
+    const tags = await getAsterisms(asterisms);
+    const a = tags.join(' ');
+    console.log(a)
+    $("#modal_msg").append(`<p>${a}</p>`);
 }
+
+
 
 const clickFlag = (id, starName) => {
   console.log(id)
@@ -73,13 +98,8 @@ const clickFlag = (id, starName) => {
 }
 
 const makeInputModal = () => {
-
-  modalTitle = document.getElementById("modal_starname");
-  modalTitle.innerHTML = `<h3>Making A New Star</h3>`;
-
-  modalBody = document.getElementById("modal_body");
-  modalBody.innerHTML = `
-        <form id="formTag" action="http://52.78.57.243:5000/star" method="POST" enctype="multipart/form-data" target="_blank">
+    modalBody = document.getElementById("modal_body");
+    modalBody.innerHTML = `
         <div class="container">
             <div class="inputBox">
                 <div>
@@ -108,18 +128,21 @@ const makeInputModal = () => {
                 </div>
             </div>
         </div>
-        </form> 
         `;
 
   modalFoot = document.getElementById("modal_createdAt");
   modalFoot.innerHTML = `<div class="box"></div>`;
 }
 
-const btn = document.getElementById("createStar");
-btn.onclick = () => {
+// create new star 버튼입니다
+const btn = $("#createStar");
+// 마우스가 호버 되면 색이 변합니다
+btn.hover(() => { btn.css('background-color', '#616183'); }, () => { btn.css('background-color', '#45425c'); })
+// 클릭하면 모달창을 띄웁니다
+btn.on('click', () => {
   makeInputModal();
   modal.style.display = "block";
-}
+})
 
 const formData = new FormData();
 const inputChange = (name, value) => {
