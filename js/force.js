@@ -55,17 +55,6 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .on("drag", function () { force.start(); const r = [d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]; t0 = Date.now(); origin = r; projection.rotate(r); }))
 
 
-  svg.append('defs').append('pattern')
-    .attr('id', 'imgpattern')
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('width', 1)
-    .attr('height', 1)
-    .append('image')
-    .attr('width', 40)
-    .attr('height', 30)
-    .attr('xlink:href', 'http://viewers.heraldcorp.com/news/photo/201804/12640_7045_488.jpg')
-
 
   d3.json('http://52.78.57.243:5000/star', (err, nodesData) => {
     if (err) throw err;
@@ -134,6 +123,19 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       nodes.push(nodesData[key]);
     }
 
+    // svg.append('defs').append('pattern')
+    // .attr('id', 'imgpattern')
+    // .attr('x', 0)
+    // .attr('y', 0)
+    // .attr('width', 1)
+    // .attr('height', 1)
+    // .append('image')
+    // .attr('width', 30)
+    // .attr('height', 30)
+    // .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/'+`${n.imgName}`)
+    // console.log(nodes);
+    //1536549719672.png
+
     let link = svg.selectAll("path.link")
       .data(links)
       .enter().append("path").attr("class", "link")
@@ -143,11 +145,24 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .enter().append("path").attr("class", "node")
       .style("stroke", function (d) { return '#000'; })
       .call(force.drag)
-      .style("fill", 'url(#imgpattern)')
+      .style("fill", function(d, i) {
+        console.log(d.imgName);
+        svg.append('defs').append('pattern')
+        .attr('id', 'imgpattern'+i)
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', 1)
+        .attr('height', 1)
+        .append('image')
+        .attr('width', 30)
+        .attr('height', 30)
+        .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/'+d.imgName)
+        return `url(#imgpattern${i})`})
       .on("click", (e) => {
         passingDataToModal(e.id, e.starName);
         modal.style.display = "block";
       });
+
 
     force
       .nodes(nodes)
@@ -155,6 +170,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .on("tick", tick)
       .start();
 
+      
     // star들이 극쪽에 집중되지 않게 합니다
     function transformY(y) {
       if (y % 360 >= -90 && y % 360 < 90) {
