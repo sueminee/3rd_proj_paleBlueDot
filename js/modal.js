@@ -134,7 +134,6 @@ const uploadImg = (name, value) => {
 }
 
 const submitNewStar = () => {
-  axios
-    .post('http://52.78.57.243:5000/star', formData)
-    .then(res => window.location.reload())
+  axios.post('http://52.78.57.243:5000/star', formData)
+  .then(res => window.location.reload())
 }
