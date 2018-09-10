@@ -119,35 +119,25 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 
     // 함수들정의
     var mouseOverFunction = function (d) {
-      var circle = d3.select(this);
-
       node
-        .transition(500)
+        .transition(1000)
         .style("opacity", function (o) {
           return isConnected(o, d) ? 1.0 : 0.2;
         })
-
       link
-        .transition(500)
+        .transition(1000)
         .style("stroke-opacity", function (o) {
           return o.source === d || o.target === d ? 1 : 0.2;
         })
     }
 
     var mouseOutFunction = function () {
-      var circle = d3.select(this);
-
       node
-        .transition(500)
+        .transition(1000)
         .style("opacity", 1.0);
-
       link
-        .transition(500)
+        .transition(1000)
         .style("stroke-opacity", 0.5);
-
-      circle
-        .transition(500)
-        .attr("r", 15);
     }
 
     function isConnected(a, b) {
