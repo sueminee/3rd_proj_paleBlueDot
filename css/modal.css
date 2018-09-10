@@ -18,12 +18,15 @@
 }
 
 .modal_content {
+    display: flex;
+    flex-direction: column;
     position: relative;
     background-color: #fefefe;
     margin: auto;
     color: #a4a2e5;
     padding: 0;
     border: 1px solid #888;
+    border-radius: 2px;
     width: 70%;
     min-height: 500px;
     min-width:500px;
@@ -37,11 +40,6 @@
 /* Add Animation */
 @-webkit-keyframes animatetop {
     from {bottom:-300px; opacity:0} 
-    to {bottom:0; opacity:1}
-}
-
-@keyframes animatetop {
-    from {bottom:-300px; opacity:0}
     to {bottom:0; opacity:1}
 }
 
@@ -60,43 +58,51 @@
     cursor: pointer;
 }
 
-.modal_header_footer {
+.modal_header {
+    flex:1;
+    justify-content: space-between;
     padding: 5px 10px;
     background-color: #a2c2e5;
     color: white;
+    bottom: 0;
 }
 
 #modal_body {
+    justify-content: space-between;
     padding: 20px;
     font-size: 14px;
     width: auto;
+    height:100%;
     }
 
 #modal_footer {
+    flex:1;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background-color: #a2c2e5;
+    color: white;
+    font-size: 10px;
+}
+/* #modal_footer {
     height: 30px;
     padding: 2px 16px;
     background-color: #5cb85c;
     color: white;
-}
+} */
 
 #input_title{
-    width:95%;
-    height: 30px;
+    width: 95%;
+    height: 20px;
 }
 
 #input_msg{
-    width:95%;
-    height:100px;
+    width: 95%;
+    height: 200px;
 }
 
 #input_tag{
-    width:95%;
-    height: 30px;
-}
-
-#modal_createdAt{
-    font-size: 10px;
-    color: white;
+    width: 95%;
+    height: 20px;
 }
 
 .box{
@@ -131,12 +137,42 @@
     justify-content: space-between;
     min-width: 200px;
     width: 100%;
+    height: 100%;
 }
 
 #modal_msg{
     display: flex;
     flex-direction: column;
+    overflow:scroll;
 }
+
+#modal_msg > div{
+    flex:1;
+    /* justify-content: space-between; */
+}
+
+.no_margin_p{
+    margin:0;
+}
+
 .container > div{
     justify-content: space-between;
+}
+
+#modal_img{
+    padding: 0px 20px 0px 0px;
+}
+
+#modal_asterisms{
+    padding-top: calc(10vh - 10px);
+}
+
+.postbutton{
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 10px 0 0;
+    /* align-items: right; */
+    
+    /* align-content: flex-end; */
+    /* width: 100%; */
 }

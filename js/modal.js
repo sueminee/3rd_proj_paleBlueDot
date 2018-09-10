@@ -57,7 +57,7 @@ const passingDataToModal = async (starId, asterisms) => {
   const data = await res.json();
 
   modalTitle = document.getElementById("modal_starname");
-  modalTitle.innerHTML = `<p>${data.starName}</p>`;
+  modalTitle.innerHTML = `<h3>${data.starName}</h3>`;
 
   modalImg = document.getElementById("modal_img");
   console.log(modalImg);
@@ -69,10 +69,10 @@ const passingDataToModal = async (starId, asterisms) => {
   modalMsg = document.getElementById("modal_msg");
   modalMsg.innerHTML = `
     <div id="modal_msg" style="overflow:scroll; height:300px;">
-      <p>${data.msg}</p>
+      <p class="no_margin_p">${data.msg}</p>
     </div>`;
 
-  modalFoot = document.getElementById("modal_createdAt");
+  modalFoot = document.getElementById("modal_footer");
   modalFoot.innerHTML = `
     <div class="box">
       <div>created at ${data.createdAt}</div>
@@ -83,7 +83,7 @@ const passingDataToModal = async (starId, asterisms) => {
 
   const tags = await getAsterisms(asterisms);
   const a = tags.join(' ');
-  $("#modal_msg").append(`<div id="modal_asterisms"><p>${a}</p></div>`);
+  $("#modal_msg").append(`<div id="modal_asterisms"><p class="no_margin_p">${a}</p></div>`);
 }
 
 const clickFlag = async (id) => {
@@ -98,7 +98,7 @@ const makeInputModal = () => {
   modalTitle.innerHTML = `<h3>Create a New Star</h3>`;
 
   modalImg = document.getElementById("modal_img");
-  console.log(modalImg);
+  // console.log(modalImg);
   modalImg.innerHTML = `
     <div class="inputBox">
       <label for="image"><b>image &emsp;</b></label>
@@ -122,11 +122,11 @@ const makeInputModal = () => {
       <label for="tag"><b>tag</b></label>
       <div><input id="input_tag" type="text" placeholder="태그를 입력하세요. 여러개일 경우 띄어쓰기로 구분해주세요. (예: 마라샹궈 건대맛집 허씨네)" name="asterisms"  onchange="inputChange(this.name, this.value)"></div>
       </div>
-    <div class="inputBox">
+    <div class="postbutton">
       <button type="submit" onClick="submitNewStar()">post</button>
     </div>`;
 
-  modalFoot = document.getElementById("modal_createdAt");
+  modalFoot = document.getElementById("modal_footer");
   modalFoot.innerHTML = `<div class="box"></div>`;
 }
 
