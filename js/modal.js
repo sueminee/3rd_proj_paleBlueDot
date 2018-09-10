@@ -13,6 +13,14 @@ window.onclick = function (event) {
   }
 }
 
+// esc키 누르면 모달창 닫기
+document.onkeydown = function(evt) {
+  evt = evt || window.event;
+  if (evt.keyCode == 27) {
+    modal.style.display = "none";
+  }
+};
+
 let preview = null;
 if (window.FileReader) {
   const reader = new FileReader(), rFilter = /^(image\/bmp|image\/cis-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x-cmu-raster|image\/x-cmx|image\/x-icon|image\/x-portable-anymap|image\/x-portable-bitmap|image\/x-portable-graymap|image\/x-portable-pixmap|image\/x-rgb|image\/x-xbitmap|image\/x-xpixmap|image\/x-xwindowdump)$/i;
@@ -126,11 +134,15 @@ const makeInputModal = () => {
   modalFoot.innerHTML = `<div class="box"></div>`;
 }
 
-const btn = document.getElementById("createStar");
-btn.onclick = () => {
+// create new star 버튼입니다
+const btn = $("#createStar");
+// 마우스가 호버 되면 색이 변합니다
+btn.hover(() => { btn.css('background-color', '#616183'); }, () => { btn.css('background-color', '#45425c'); })
+// 클릭하면 모달창을 띄웁니다
+btn.on('click', () => {
   makeInputModal();
   modal.style.display = "block";
-}
+})
 
 const formData = new FormData();
 const inputChange = (name, value) => {
