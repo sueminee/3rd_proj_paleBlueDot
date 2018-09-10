@@ -35,7 +35,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 
 
     let path = d3.geo.path()
-      .pointRadius(15)
+      .pointRadius(25)
       .projection(projection)
 
 
@@ -205,16 +205,16 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .call(force.drag)
       .style('fill', function (d, i) {
         svg.append('defs').append('pattern')
-        .attr('id', 'imgpattern' + i)
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', 1)
-        .attr('height', 1)
-        .append('image')
-        .attr('width', 30)
-        .attr('height', 30)
-        .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/' + d.imgName)
-      return `url(#imgpattern${i})`
+          .attr('id', 'imgpattern' + i)
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', 1)
+          .attr('height', 1)
+          .append('image')
+          .attr('width', 50)
+          .attr('height', 50)
+          .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/' + d.imgName)
+        return `url(#imgpattern${i})`
       })
       .on("click", (e) => {
         passingDataToModal(e.id, e.starName);
