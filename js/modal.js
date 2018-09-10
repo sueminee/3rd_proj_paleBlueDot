@@ -14,7 +14,7 @@ window.onclick = function (event) {
 }
 
 // esc키 누르면 모달창 닫기
-document.onkeydown = function(evt) {
+document.onkeydown = function (evt) {
   evt = evt || window.event;
   if (evt.keyCode == 27) {
     modal.style.display = "none";
@@ -29,7 +29,7 @@ if (window.FileReader) {
     preview.src = oFREvent.target.result;
     preview.style.display = "inline-block";
   };
-  doTest= () => {
+  doTest = () => {
     if (document.getElementById("myfile").files.length === 0) { return; }
     const file = document.getElementById("myfile").files[0];
     if (!rFilter.test(file.type)) { alert("You must select a valid image file!"); return; }
@@ -47,8 +47,8 @@ const getAsterisms = async asterisms => {
   let tags = await Promise.all(asterisms.map(async asterism => {
     const res = await fetch(`http://52.78.57.243:5000/asterism/${asterism}`)
     const data = await res.json();
-    return '#' +data.asterismName;
-  })); 
+    return '#' + data.asterismName;
+  }));
   return tags;
 }
 
@@ -60,6 +60,7 @@ const passingDataToModal = async (starId, asterisms) => {
   modalTitle.innerHTML = `<p>${data.starName}</p>`;
 
   modalImg = document.getElementById("modal_img");
+  console.log(modalImg);
   modalImg.innerHTML = `
     <div>
       <img src="http://52.78.57.243:5000/${data.imgName}" height="auto" width="100%"/>
@@ -72,23 +73,29 @@ const passingDataToModal = async (starId, asterisms) => {
     </div>`;
 
   modalFoot = document.getElementById("modal_createdAt");
-  modalFoot.innerHTML = `<div class="box"><div>created at ${data.createdAt}</div><div><button id="flagButton" onclick="clickFlag(${data.id})">flag ${data.flag}</button></div></div>`;
+  modalFoot.innerHTML = `
+    <div class="box">
+      <div>created at ${data.createdAt}</div>
+      <div>
+        <button id="flagButton" onclick="clickFlag(${data.id}, ${data.asterisms})">flag ${data.flag}</button>
+      </div>
+    </div>`;
 
   const tags = await getAsterisms(asterisms);
   const a = tags.join(' ');
   $("#modal_msg").append(`<p>${a}</p>`);
 }
 
-
-
-const clickFlag = async (id, starName) => {
+const clickFlag = async (id) => {
   await fetch(`http://52.78.57.243:5000/flag/${id}`, { method: 'PUT' });
-  passingDataToModal(id, starName);
+  const data = await fetch(`http://52.78.57.243:5000/star/${id}`, { method: 'GET' });
+  const json = await data.json();
+  $("#flagButton").text("flag " + json.flag);
 }
 
 const makeInputModal = () => {
-    modalBody = document.getElementById("modal_body");
-    modalBody.innerHTML = `
+  modalBody = document.getElementById("modal_body");
+  modalBody.innerHTML = `
         <div class="container">
             <div class="inputBox">
                 <div>
