@@ -4,5 +4,5 @@ path.node {
 
 path.link {
   stroke: #999;
-  fill-opacity: 0;
+  stroke-opacity: 0.5;
 }
