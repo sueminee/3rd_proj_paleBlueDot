@@ -65,13 +65,12 @@ const clickFlag = (id, starName) => {
 }
 
 const makeInputModal = () => {
-  
+
     modalTitle = document.getElementById("modal_starname");
     modalTitle.innerHTML = `<h3>Making A New Star</h3>`;
 
     modalBody = document.getElementById("modal_body");
     modalBody.innerHTML = `
-        <form id="formTag" action="http://52.78.57.243:5000/star" method="POST" enctype="multipart/form-data" target="_blank">
         <div class="container">
             <div class="inputBox">
                 <div>
@@ -100,7 +99,6 @@ const makeInputModal = () => {
                 </div>
             </div>
         </div>
-        </form> 
         `;
 
     modalFoot = document.getElementById("modal_createdAt");
@@ -128,5 +126,7 @@ const uploadImg = (name, value) => {
 const submitNewStar = () => {
     axios
     .post('http://52.78.57.243:5000/star', formData)
-    .then(res => window.location.reload())
+    .then(res => {
+        console.log(res)
+        window.location.reload()})
 }

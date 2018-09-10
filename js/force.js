@@ -60,9 +60,9 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     .attr('width', 1)
     .attr('height', 1)
     .append('image')
-    .attr('width', 40)
-    .attr('height', 30)
-    .attr('xlink:href', 'http://viewers.heraldcorp.com/news/photo/201804/12640_7045_488.jpg')
+    .attr('width', 25)
+    .attr('height', 25)
+    .attr('xlink:href', 'http://pngimg.com/uploads/red_star/red_star_PNG9.png')
 
 
   d3.json('http://52.78.57.243:5000/star', (err, nodesData) => {
