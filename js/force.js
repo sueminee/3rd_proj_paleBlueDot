@@ -169,13 +169,9 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     }
 
     function tick() {
-      node.attr("d", function (d) {
-        const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, transformY(d.y)] } });
-        return p
-      });
+      node.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, transformY(d.y)] } }); return p; });
       link.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[d.source.x, transformY(d.source.y)], [d.target.x, transformY(d.target.y)]] } }); return p });
     }
-
 
   });
 })
