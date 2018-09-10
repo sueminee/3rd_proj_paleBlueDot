@@ -126,7 +126,11 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
 
     let node = svg.selectAll("path.node")
       .data(nodes)
-      .enter().append("path").attr("class", "node")
+      .enter().append("path")
+      .attr("class", "node")
+      .attr("id", function (d, i) {
+        return 'node' + i;
+      })
       .call(force.drag)
       .style("fill", function (d, i) {
         console.log(d.imgName);
@@ -148,20 +152,22 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       });
 
     // 별 둘레를 깜빡이는 함수입니다
-    const setColor = function (str, direction) {
-      num = parseInt(str, 16);
+    const setColor = function (i, str, direction) {
+      const num = parseInt(str, 16);
       if (direction === 1) {
-        if (num === 15) { return setColor('f', -1); }
-        console.log(Math.sin(num * Math.PI / 32) * 10);
-        setTimeout(() => setColor((num + 1).toString(16), 1), Math.sin(num * Math.PI / 32) * 100)
-        return $('.node').css('stroke', '#' + str + str + str);
+        if (num === 15) { return setColor(i, 'f', -1); }
+        setTimeout(() => setColor(i, (num + 1).toString(16), 1), Math.sin(num * Math.PI / 32) * 100)
+        return $('#node' + i).css('stroke', '#' + str + str + str);
       } else if (direction === -1) {
-        if (num === 0) { return setColor('0', 1); }
-        setTimeout(() => setColor((num - 1).toString(16), -1), Math.sin(num * Math.PI / 32) * 100)
-        return $('.node').css('stroke', '#' + str + str + str);
+        if (num === 0) { return setColor(i, '0', 1); }
+        setTimeout(() => setColor(i, (num - 1).toString(16), -1), Math.sin(num * Math.PI / 32) * 100)
+        return $('#node' + i).css('stroke', '#' + str + str + str);
       }
     }
-    setColor('7', 1)
+
+    for (let i = 0; i < nodes.length; i++) {
+      setColor(i, (i % 16).toString(16), 1)
+    }
 
     force
       .nodes(nodes)
