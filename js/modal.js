@@ -52,7 +52,7 @@ const getAsterisms = async asterisms => {
   return tags;
 }
 
-const passingDataToModal = async (starId, starName, asterisms) => {
+const passingDataToModal = async (starId, asterisms) => {
 
   await fetch(`http://52.78.57.243:5000/star/${starId}`)
     .then((res) => res.json())
