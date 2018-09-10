@@ -29,15 +29,13 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     let scale = Object.keys(nodesData).length * 7;
 
     const projection = projections[config["projection"]]  //gnomonic
-      .scale(scale)  //여기를 조절해 원하는 크기의 우주를 생성합니다
+      .scale(scale)  // 여기를 조절해 원하는 크기의 우주를 생성합니다
       .translate([width / 2, height / 2])
       .clipAngle(config["clip"] ? 90 : null)
 
-
     let path = d3.geo.path()
-      .pointRadius(15)
+      .pointRadius(25)  // star의 반지름입니다.
       .projection(projection)
-
 
     const force = d3.layout.force()
       .linkDistance(config["linkDistance"])
@@ -45,7 +43,6 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .gravity(config["gravity"])
       .size([width, height])
       .charge(-config["charge"]);
-
 
     // svg라는 element를 만들어냅니다
     let svg = d3.select("#svgContainer").append("svg")
@@ -120,6 +117,50 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       nodes.push(nodesData[key]);
     }
 
+    // 함수들정의
+    var mouseOverFunction = function (d) {
+      node
+        .transition(1000)
+        .style("opacity", function (o) {
+          return isConnected(o, d) ? 1.0 : 0.2;
+        })
+      link
+        .transition(1000)
+        .style("stroke-opacity", function (o) {
+          return o.source === d || o.target === d ? 1 : 0.2;
+        })
+    }
+
+    var mouseOutFunction = function () {
+      node
+        .transition(1000)
+        .style("opacity", 1.0);
+      link
+        .transition(1000)
+        .style("stroke-opacity", 0.5);
+    }
+
+    function isConnected(a, b) {
+      return isConnectedAsTarget(a, b) || isConnectedAsSource(a, b) || a.asterisms === b.asterisms;
+    }
+
+    function isConnectedAsSource(a, b) {
+      return linkedByIndex[a.asterisms + "," + b.asterisms];
+    }
+
+    function isConnectedAsTarget(a, b) {
+      return linkedByIndex[b.asterisms + "," + a.asterisms];
+    }
+
+    function isEqual(a, b) {
+      return a.asterisms === b.asterisms;
+    }
+
+    var linkedByIndex = {};
+    links.forEach(function (d) {
+      linkedByIndex[d.source.asterisms + "," + d.target.asterisms] = true;
+    });
+
     let link = svg.selectAll("path.link")
       .data(links)
       .enter().append("path").attr("class", "link")
@@ -132,8 +173,7 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
         return 'node' + i;
       })
       .call(force.drag)
-      .style("fill", function (d, i) {
-        console.log(d.imgName);
+      .style('fill', function (d, i) {
         svg.append('defs').append('pattern')
           .attr('id', 'imgpattern' + i)
           .attr('x', 0)
@@ -141,15 +181,32 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
           .attr('width', 1)
           .attr('height', 1)
           .append('image')
-          .attr('width', 30)
-          .attr('height', 30)
+          .attr('width', 50)
+          .attr('height', 50)
           .attr('xlink:href', 'http://52.78.57.243:5000/thumbs/' + d.imgName)
         return `url(#imgpattern${i})`
       })
       .on("click", (e) => {
         passingDataToModal(e.id, e.starName);
         modal.style.display = "block";
-      });
+      })
+      .on("mouseover", mouseOverFunction)
+      .on("mouseout", mouseOutFunction);
+
+    svg
+      .append("marker")
+      .attr("id", "arrowhead")
+      .attr("refX", 6 + 7) // Controls the shift of the arrow head along the path
+      .attr("refY", 2)
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 4)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M 0,0 V 4 L6,2 Z");
+
+    link
+      .attr("marker-end", "url()");
+
 
     // 별 둘레를 깜빡이는 함수입니다
     const setColor = function (i, str, direction) {
@@ -164,7 +221,6 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
         return $('#node' + i).css('stroke', '#' + str + str + str);
       }
     }
-
     for (let i = 0; i < nodes.length; i++) {
       setColor(i, (i % 16).toString(16), 1)
     }
@@ -174,7 +230,6 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
       .links(links)
       .on("tick", tick)
       .start();
-
 
     // star들이 극쪽에 집중되지 않게 합니다
     function transformY(y) {
@@ -190,9 +245,8 @@ d3.json('http://52.78.57.243:5000/asterism', (error, linksData) => {
     }
 
     function tick() {
-      node.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, transformY(d.y)] } }); return p; });
       link.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "LineString", "coordinates": [[d.source.x, transformY(d.source.y)], [d.target.x, transformY(d.target.y)]] } }); return p });
+      node.attr("d", function (d) { const p = path({ "type": "Feature", "geometry": { "type": "Point", "coordinates": [d.x, transformY(d.y)] } }); return p; })
     }
-
   });
 })
